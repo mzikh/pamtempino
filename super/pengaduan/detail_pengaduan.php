@@ -107,7 +107,7 @@ if (isset($_GET['id'])) {
                 document.getElementById('ubahStatusButton').innerText = newButtonText; // Update the button text
                 alert("Status pengaduan berhasil diubah.");
             } else {
-                alert("Gagal mengubah status pengaduan.");
+                alert("Gagal mengubah status pengaduan lee.");
             }
         },
         error: function(xhr, status, error) {
