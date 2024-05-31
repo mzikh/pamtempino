@@ -89,7 +89,7 @@ include "inc/koneksi.php";
     </form>
   </div>
   <div class="copyright">
-    Copyright &copy; ElseIf 2020
+    Copyright &copy; pampinos 2024
   </div>
 
   <script src="assets/js/jquery-1.10.2.js"></script>
