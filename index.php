@@ -346,8 +346,8 @@ font-size: 16px;">
 							case 'lihat_pengaduan':
 								include "super/pengaduan/lihat_pengaduan.php";
 								break;
-							case 'lihat_pengaduan':
-								include "super/pengaduan/lihat_pengaduan.php";
+							case 'detail_pengaduan':
+								include "super/pengaduan/detail_pengaduan.php";
 								break;
 
                                 //Tagihan
