@@ -23,15 +23,18 @@
             <tbody>
             <?php
 $no = 1;
-$sql = $koneksi->query("SELECT p.*, pl.nama_pelanggan FROM tb_pengaduan p JOIN tb_pelanggan pl ON p.id_pelanggan = pl.id_pelanggan");
+$sql = $koneksi->query("SELECT p.*, pl.nama_pelanggan AS nama_pelanggan 
+                        FROM tb_pengaduan p 
+                        LEFT JOIN tb_pelanggan pl ON p.id_pelanggan = pl.id_pelanggan 
+                        WHERE p.id_pelanggan = '$data_rek'");
 while ($data = $sql->fetch_assoc()) {
 ?>
     <tr>
-        <td><?php echo $no++; ?></td>
-        <td><?php echo $data['tgl_pengaduan']; ?></td>
-        <td><?php echo $data['nama_pelanggan']; ?></td>
-        <td><?php echo $data['subjek_pengaduan']; ?></td>
-    <?php $warna = $data['status_pengaduan']  ?>
+        <td><?php echo $no++;?></td>
+        <td><?php echo $data['tgl_pengaduan'];?></td>
+        <td><?php echo $data['nama_pelanggan'];?></td>
+        <td><?php echo $data['subjek_pengaduan'];?></td>
+    <?php $warna = $data['status_pengaduan']; ?>
         
 
 <td> 
@@ -40,7 +43,7 @@ while ($data = $sql->fetch_assoc()) {
     <?php } elseif ($warna == 'Proses') { ?>
         <span class="label label-info">Proses</span>
     <?php } else { ?>
-        <span class="label label-succes">Default</span>
+        <span class="label label-success">Selesai</span>
     <?php } ?>
 </td>
 

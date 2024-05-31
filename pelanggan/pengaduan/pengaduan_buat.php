@@ -1,96 +1,72 @@
 <?php
 include "inc/koneksi.php";
 
-?>
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $tgl_pengaduan = date('Y-m-d H:i:s');
+    $subjek_pengaduan = $koneksi->real_escape_string($_POST['subjek_pengaduan']);
+    $deskripsi_pengaduan = $koneksi->real_escape_string($_POST['deskripsi_pengaduan']);
+    $id_pelanggan = $data_rek;
 
-<div class="container">
-  <div class="row">
-    <div class="col-md-6">
-      <div class="panel panel-primary">
-        <div class="panel-heading">
-          <h3 class="panel-title">Form Pengaduan</h3>
-        </div>
-        <div class="panel-body">
-          <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-            <div class="form-group">
-              <label for="subjek">Subjek Pengaduan:</label>
-              <select class="form-control" id="subjek" name="subjek" required>
-                <option value="">Pilih Subjek Pengaduan</option>
-                <option value="Layanan Pelanggan">Layanan Pelanggan</option>
-                <option value="Teknologi Informasi">Teknologi Informasi</option>
-                <option value="Keuangan">Keuangan</option>
-                <option value="Lainnya">Lainnya</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="deskripsi">Deskripsi Pengaduan:</label>
-              <textarea class="form-control" id="deskripsi" name="deskripsi" rows="5" required></textarea>
-            </div>
-            <div class="form-group">
-              <label for="foto">Upload Foto:</label>
-              <input type="file" class="form-control" id="foto" name="foto" accept="image/*" required>
-            </div>
-            <button type="submit" class="btn btn-primary" name="Simpan">Kirim Pengaduan</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+    // Ambil data file foto
+    $file_foto = $_FILES['foto_pengaduan'];
+    $nama_foto = $file_foto['name'];
+    $tmp_foto = $file_foto['tmp_name'];
 
-<?php
-if (isset($_POST['Simpan'])) {
-  // Mengaktifkan pelaporan kesalahan
-  mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+    // Cek apakah file foto ada atau tidak
+    if (!empty($nama_foto)) {
+      $fileType = strtolower(pathinfo($nama_foto, PATHINFO_EXTENSION));
+    if ($fileType!= "jpg" && $fileType!= "jpeg" && $fileType!= "png") {
+        echo "<script>alert('Hanya file PNG, JPG, dan JPEG yang diizinkan');window.location='index.php?halaman=". sha1('p_pengaduan_buat'). "'</script>";
+        exit;
+    }
+        // Set path folder foto
+        $path_folder = "uploads/pengaduan/";
+        $path_file = $path_folder. $nama_foto;
 
-  // Asumsikan pengguna sudah login dan $id_pelanggan diambil dari sesi
-  if (!isset($_SESSION['id_pelanggan'])) {
-      die('User belum login');
-  }
+        // Cek apakah folder uploads ada atau tidak
+        if (!file_exists($path_folder)) {
+            mkdir($path_folder, 0777, true);
+        }
 
-  $id_pelanggan = $_SESSION['id_pelanggan'];
-  $subjek = $_POST['subjek'];
-  $deskripsi = $_POST['deskripsi'];
-  $tgl_pengaduan = date('Y-m-d H:i:s');
-  $status_pengaduan = 'pending';
-  $tgl_diselesaikan = NULL;
+        // Upload foto
+        if (move_uploaded_file($tmp_foto, $path_file)) {
+            $sql = $koneksi->query("INSERT INTO tb_pengaduan (tgl_pengaduan, id_pelanggan, subjek_pengaduan, deskripsi_pengaduan, foto_pengaduan, status_pengaduan) 
+                                    VALUES ('$tgl_pengaduan', '$id_pelanggan', '$subjek_pengaduan', '$deskripsi_pengaduan', '$nama_foto', 'Pending')");
 
-  // Handle file upload
-  $foto = null;
-  if (isset($_FILES['foto']) && $_FILES['foto']['error'] == UPLOAD_ERR_OK) {
-      $uploadDir = 'uploads/';
-      $uploadFile = $uploadDir. basename($_FILES['foto']['name']);
-      if (move_uploaded_file($_FILES['foto']['tmp_name'], $uploadFile)) {
-          $foto = $_FILES['foto']['name'];
-      } else {
-          echo "<script>alert('Upload Foto Gagal');</script>";
-          echo "<meta http-equiv='refresh' content='0; url=index.php?halaman=layanan_tampil'>";
-          exit;
-      }
-  }
+            if ($sql) {
+                echo "<script>alert('Pengaduan berhasil disimpan');window.location='index.php?halaman=". sha1('p_pengaduan_tampil'). "'</script>";
+            } else {
+                echo "<script>alert('Pengaduan gagal disimpan: ". $koneksi->error. "');window.location='index.php?halaman=pengaduan'</script>";
+            }
+        } else {
+            echo "<script>alert('Foto gagal diupload');window.location='index.php?halaman=pengaduan'</script>";
+        }
+    } else {
+        $sql = $koneksi->query("INSERT INTO tb_pengaduan (tgl_pengaduan, id_pelanggan, subjek_pengaduan, deskripsi_pengaduan, status_pengaduan) 
+                                VALUES ('$tgl_pengaduan', '$id_pelanggan', '$subjek_pengaduan', '$deskripsi_pengaduan', 'Pending')");
 
-  try {
-      // Menyiapkan pernyataan SQL dengan placeholder
-      $stmt = $koneksi->prepare("INSERT INTO tb_pengaduan (id_pelanggan, tgl_pengaduan, subjek_pengaduan, deskripsi_pengaduan, status_pengaduan, tgl_diselesaikan, foto) VALUES (?,?,?,?,?,?,?)");
-
-      if ($stmt === false) {
-          throw new Exception('Prepare failed: '. htmlspecialchars($koneksi->error));
-      }
-
-      // Mengikat parameter ke placeholder
-      $stmt->bind_param("issssss", $id_pelanggan, $tgl_pengaduan, $subjek, $deskripsi, $status_pengaduan, $tgl_diselesaikan, $foto);
-
-      // Menjalankan pernyataan
-      $stmt->execute();
-
-      // Menutup pernyataan
-      $stmt->close();
-
-      echo "<script>alert('Simpan Berhasil');</script>";
-      echo "<meta http-equiv='refresh' content='0; url=index.php?halaman=layanan_tampil'>";
-  } catch (Exception $e) {
-      echo "<script>alert('Simpan Gagal: ". $e->getMessage(). "');</script>";
-      echo "<meta http-equiv='refresh' content='0; url=index.php?halaman=layanan_tampil'>";
-  }
+        if ($sql) {
+            echo "<script>alert('Pengaduan berhasil disimpan');window.location='index.php?halaman=". sha1('p_pengaduan_tampil'). "'</script>";
+        } else {
+            echo "<script>alert('Pengaduan gagal disimpan: ". $koneksi->error. "');window.location='index.php?halaman=pengaduan'</script>";
+        }
+    }
 }
 ?>
+
+<form action="" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="id_pelanggan" value="<?php echo $_SESSION['id_pelanggan'];?>">
+    <div class="form-group">
+        <label>Subjek</label>
+        <input type="text" name="subjek_pengaduan" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label>Deskripsi Pengaduan</label>
+        <textarea name="deskripsi_pengaduan" class="form-control" rows="5" required></textarea>
+    </div>
+    <div class="form-group">
+        <label>Foto Pengaduan</label>
+        <input type="file" name="foto_pengaduan" class="form-control">
+    </div>
+    <button type="submit" name="simpan" class="btn btn-primary">Simpan</button>
+</form>
