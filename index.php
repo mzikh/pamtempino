@@ -112,7 +112,7 @@ font-size: 16px;">
 							</li>
 						</ul>
 					</li>
-					<!-- <li>
+					<li>
 						<a href="#">
 							<i class="fa fa-book fa-2x"></i> Administrasi
 							<span class="fa arrow"></span>
@@ -144,7 +144,7 @@ font-size: 16px;">
 							</li>
 
 						</ul>
-					</li> -->
+					</li>
 
 					<li>
 						<a href="#">
