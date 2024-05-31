@@ -1,4 +1,3 @@
-
 <?php
 
 include "inc/koneksi.php";
@@ -12,6 +11,16 @@ if (isset($_GET['id'])) {
                 WHERE p.id_pengaduan='$id_pengaduan'";
     $query_cek = mysqli_query($koneksi, $sql_cek);
     $data_cek = mysqli_fetch_array($query_cek, MYSQLI_BOTH);
+
+    // Set button text based on the current status
+    $button_text = "";
+    if ($data_cek['status_pengaduan'] == 'Pending') {
+        $button_text = "Proses";
+    } else if ($data_cek['status_pengaduan'] == 'Proses') {
+        $button_text = "Selesai";
+    } else {
+        $button_text = "Selesai";
+    }
 }
 ?>
 
@@ -46,8 +55,7 @@ if (isset($_GET['id'])) {
 
                     <div class="form-group">
                         <label>Status Pengaduan</label>
-                        <input class="form-control" value="<?php echo $data_cek['status_pengaduan'];?>" readonly/>
-                        <button type="button" class="btn btn-primary" onclick="ubahStatus('<?php echo $data_cek['id_pengaduan'];?>')">Ubah Status</button>
+                        <input class="form-control" value="<?php echo $data_cek['status_pengaduan'];?>" readonly id="status_pengaduan"/>
                     </div>
 
                     <div class="form-group">
@@ -55,49 +63,65 @@ if (isset($_GET['id'])) {
                         <img src="uploads/pengaduan/<?php echo $data_cek['foto_pengaduan'];?>" alt="<?php echo $data_cek['subjek_pengaduan'];?>" width="300">
                     </div>
 
-                    <div>
+                    <div class="form-group">
                         <a href="?halaman=lihat_pengaduan" title="Kembali" class="btn btn-default">Kembali</a>
+                        <button type="button" class="btn btn-primary" id="ubahStatusButton" onclick="ubahStatus('<?php echo $data_cek['id_pengaduan'];?>')">
+                            <?php echo $button_text; ?>
+                        </button>
                     </div>
 
+                </form>
             </div>
-            </form>
         </div>
-
     </div>
 </div>
 
 <script>
     function ubahStatus(id_pengaduan) {
-        var status = '';
-        if ('<?php echo $data_cek['status_pengaduan'];?>' == 'Pending') {
-            status = 'Proses';
-        } else if ('<?php echo $data_cek['status_pengaduan'];?>' == 'Proses') {
-            status = 'Selesai';
-        }
-$.ajax({
-            url: "<?php echo $_SERVER['PHP_SELF'];?>",
-            type: "POST",
-            data: {
-                id_pengaduan: id_pengaduan,
-                status: status,
-                ubah_status: true
-            },
-            success: function(response) {
-                if (response == "success") {
-                    alert("Status pengaduan berhasil diubah.");
-                    window.location.reload();
-                } else {
-                    alert("Gagal mengubah status pengaduan.");
-                }
-            }
-        });
+    var currentStatus = document.getElementById('status_pengaduan').value;
+    var newStatus = '';
+    var newButtonText = '';
+
+    if (currentStatus == 'Pending') {
+        newStatus = 'Proses';
+        newButtonText = 'Selesai';
+    } else if (currentStatus == 'Proses') {
+        newStatus = 'Selesai';
+        newButtonText = 'Selesai';
+    } else {
+        alert("Pengaduan sudah selesai.");
+        return;
     }
+
+    $.ajax({
+        url: "<?php echo $_SERVER['PHP_SELF'];?>",
+        type: "POST",
+        data: {
+            id_pengaduan: id_pengaduan,
+            status: newStatus,
+            ubah_status: true
+        },
+        success: function(response) {
+            if (response == "success") {
+                document.getElementById('status_pengaduan').value = newStatus; // Update the status display
+                document.getElementById('ubahStatusButton').innerText = newButtonText; // Update the button text
+                alert("Status pengaduan berhasil diubah.");
+            } else {
+                alert("Gagal mengubah status pengaduan.");
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error("Error: " + error);
+            alert("Gagal mengubah status pengaduan.");
+        }
+    });
+}
 </script>
 
 <?php
 if (isset($_POST['ubah_status'])) {
     $id_pengaduan = $_POST['id_pengaduan'];
-    $status = $_POST['status_pengaduan'];
+    $status = $_POST['status'];
     
     $sql_ubah = "UPDATE tb_pengaduan SET status_pengaduan='$status' WHERE id_pengaduan='$id_pengaduan'";
     $query_ubah = mysqli_query($koneksi, $sql_ubah);
