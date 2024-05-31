@@ -31,8 +31,7 @@ if (isset($_GET['id'])) {
     <div class="panel-body">
         <div class="row">
             <div class="col-md-12">
-                <form>
-
+                <form id="ubahStatusForm" enctype="multipart/form-data">
                     <div class="form-group">
                         <label>Tanggal Pengaduan</label>
                         <input class="form-control" value="<?php echo $data_cek['tgl_pengaduan'];?>" readonly/>
@@ -63,13 +62,18 @@ if (isset($_GET['id'])) {
                         <img src="uploads/pengaduan/<?php echo $data_cek['foto_pengaduan'];?>" alt="<?php echo $data_cek['subjek_pengaduan'];?>" width="300">
                     </div>
 
+                    <!-- File upload field, hidden initially -->
+                    <div class="form-group" id="uploadField" style="display: none;">
+                        <label>Upload Foto Bukti Pengaduan</label>
+                        <input type="file" class="form-control" name="bukti_pengaduan" id="bukti_pengaduan" accept="image/*" onchange="enableButton()">
+                    </div>
+
                     <div class="form-group">
                         <a href="?halaman=lihat_pengaduan" title="Kembali" class="btn btn-default">Kembali</a>
-                        <button type="button" class="btn btn-primary" id="ubahStatusButton" onclick="ubahStatus('<?php echo $data_cek['id_pengaduan'];?>')">
+                        <button type="button" class="btn btn-primary" id="ubahStatusButton" onclick="ubahStatus('<?php echo $data_cek['id_pengaduan'];?>')" disabled>
                             <?php echo $button_text; ?>
                         </button>
                     </div>
-
                 </form>
             </div>
         </div>
@@ -77,59 +81,129 @@ if (isset($_GET['id'])) {
 </div>
 
 <script>
-    function ubahStatus(id_pengaduan) {
-    var currentStatus = document.getElementById('status_pengaduan').value;
-    var newStatus = '';
-    var newButtonText = '';
+    document.addEventListener('DOMContentLoaded', function () {
+        var currentStatus = document.getElementById('status_pengaduan').value;
+        if (currentStatus == 'Proses') {
+            document.getElementById('uploadField').style.display = 'block';
+        }
+        enableButton(); // Check the button state on load
+    });
 
-    if (currentStatus == 'Pending') {
-        newStatus = 'Proses';
-        newButtonText = 'Selesai';
-    } else if (currentStatus == 'Proses') {
-        newStatus = 'Selesai';
-        newButtonText = 'Selesai';
-    } else {
-        alert("Pengaduan sudah selesai.");
-        return;
+    function enableButton() {
+        var currentStatus = document.getElementById('status_pengaduan').value;
+        if (currentStatus == 'Proses') {
+            var fileInput = document.getElementById('bukti_pengaduan');
+            document.getElementById('ubahStatusButton').disabled = !fileInput.files.length;
+        } else {
+            document.getElementById('ubahStatusButton').disabled = false;
+        }
     }
 
-    $.ajax({
-        url: "<?php echo $_SERVER['PHP_SELF'];?>",
-        type: "POST",
-        data: {
-            id_pengaduan: id_pengaduan,
-            status: newStatus,
-            ubah_status: true
-        },
-        success: function(response) {
-            if (response == "success") {
-                document.getElementById('status_pengaduan').value = newStatus; // Update the status display
-                document.getElementById('ubahStatusButton').innerText = newButtonText; // Update the button text
-                alert("Status pengaduan berhasil diubah.");
-            } else {
-                alert("Gagal mengubah status pengaduan lee.");
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error("Error: " + error);
-            alert("Gagal mengubah status pengaduan.");
+    function ubahStatus(id_pengaduan) {
+        var currentStatus = document.getElementById('status_pengaduan').value;
+        var newStatus = '';
+        var newButtonText = '';
+
+        if (currentStatus == 'Pending') {
+            newStatus = 'Proses';
+            newButtonText = 'Selesai';
+        } else if (currentStatus == 'Proses') {
+            newStatus = 'Selesai';
+            newButtonText = 'Selesai';
+        } else {
+            alert("Pengaduan sudah selesai.");
+            return;
         }
-    });
-}
+
+        var formData = new FormData(document.getElementById('ubahStatusForm'));
+        formData.append('id_pengaduan', id_pengaduan);
+        formData.append('status', newStatus);
+        formData.append('ubah_status', true);
+
+        $.ajax({
+            url: "<?php echo $_SERVER['PHP_SELF'];?>",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                if (response == "success") {
+                    document.getElementById('status_pengaduan').value = newStatus; // Update the status display
+                    document.getElementById('ubahStatusButton').innerText = newButtonText; // Update the button text
+                    alert("Status pengaduan berhasil diubah.");
+                    if (newStatus == 'Selesai') {
+                        document.getElementById('uploadField').style.display = 'none'; // Hide upload field
+                    }
+                } else {
+                    alert("Gagal mengubah status pengaduan.");
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error: " + error);
+                alert("Gagal mengubah status pengaduan.");
+            }
+        });
+    }
 </script>
 
 <?php
 if (isset($_POST['ubah_status'])) {
     $id_pengaduan = $_POST['id_pengaduan'];
     $status = $_POST['status'];
-    
-    $sql_ubah = "UPDATE tb_pengaduan SET status_pengaduan='$status' WHERE id_pengaduan='$id_pengaduan'";
-    $query_ubah = mysqli_query($koneksi, $sql_ubah);
-    
-    if ($query_ubah) {
-        echo "success";
+
+    if ($status == 'Selesai' && isset($_FILES['bukti_pengaduan'])) {
+        $target_dir = "uploads/bukti/";
+        $target_file = $target_dir . basename($_FILES["bukti_pengaduan"]["name"]);
+        $uploadOk = 1;
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+        // Check if image file is a actual image or fake image
+        $check = getimagesize($_FILES["bukti_pengaduan"]["tmp_name"]);
+        if($check !== false) {
+            $uploadOk = 1;
+        } else {
+            echo "File is not an image.";
+            $uploadOk = 0;
+        }
+
+        // Check file size
+        if ($_FILES["bukti_pengaduan"]["size"] > 500000) {
+            echo "Sorry, your file is too large.";
+            $uploadOk = 0;
+        }
+
+        // Allow certain file formats
+        if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+        && $imageFileType != "gif" ) {
+            echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+            $uploadOk = 0;
+        }
+
+        // Check if $uploadOk is set to 0 by an error
+        if ($uploadOk == 0) {
+            echo "Sorry, your file was not uploaded.";
+        // if everything is ok, try to upload file
+        } else {
+            if (move_uploaded_file($_FILES["bukti_pengaduan"]["tmp_name"], $target_file)) {
+                $sql_ubah = "UPDATE tb_pengaduan SET status_pengaduan='$status', bukti_pengaduan='".basename($_FILES["bukti_pengaduan"]["name"])."' WHERE id_pengaduan='$id_pengaduan'";
+                $query_ubah = mysqli_query($koneksi, $sql_ubah);
+                if ($query_ubah) {
+                    echo "success";
+                } else {
+                    echo "failed";
+                }
+            } else {
+                echo "Sorry, there was an error uploading your file.";
+            }
+        }
     } else {
-        echo "failed";
+        $sql_ubah = "UPDATE tb_pengaduan SET status_pengaduan='$status' WHERE id_pengaduan='$id_pengaduan'";
+        $query_ubah = mysqli_query($koneksi, $sql_ubah);
+        if ($query_ubah) {
+            echo "success";
+        } else {
+            echo "failed";
+        }
     }
 }
 ?>
