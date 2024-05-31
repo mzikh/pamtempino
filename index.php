@@ -61,7 +61,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a href="http://localhost/pamsimas1" class="navbar-brand">PAMSIMAS</a>
+				<a href="http://localhost/pamtempino" class="navbar-brand">PAMSIMAS</a>
 			</div>
 			<div style="color: white;
 padding: 15px 50px 5px 50px;

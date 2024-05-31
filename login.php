@@ -122,7 +122,7 @@ include "inc/koneksi.php";
                         Swal.fire({title: 'Login Berhasil',text: '',icon: 'success',confirmButtonText: 'OK'
                         }).then((result) => {
                             if (result.value) {
-                                window.location = 'http://localhost/pamsimas1';
+                                window.location = 'http://localhost/pamtempino';
                             }
                         })</script>";
 			}else{
