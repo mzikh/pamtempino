@@ -74,6 +74,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="row">
             <div class="col-md-12">
                 <form action="" method="post" enctype="multipart/form-data">
+
+                    <div class="form-group">
+                        <label>Tanggal Pengaduan</label>
+                        <input class="form-control" value="<?php echo $data_cek['tgl_pengaduan'];?>" readonly/>
+                    </div>
+
                     <input type="hidden" name="id_pengaduan" value="<?php echo $id_pengaduan;?>">
                     <div class="form-group">
                         <label>Subjek</label>
