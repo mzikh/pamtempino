@@ -160,7 +160,7 @@ font-size: 16px;">
 						</ul>
 					</li>
 
-					<!-- <li>
+					<li>
 						<a href="#">
 							<i class="fa fa-file fa-2x"></i> Laporan
 							<span class="fa arrow"></span>
@@ -170,7 +170,7 @@ font-size: 16px;">
 								<a href="?halaman=lap_masuk">Laporan Pemasukan</a>
 							</li>
 						</ul>
-					</li> -->
+					</li>
 
 					<?php
                             } elseif($data_level=="Operator"){
@@ -184,6 +184,20 @@ font-size: 16px;">
 					<li>
 						<a href="?halaman=pakai_tampil">
 							<i class="fa fa-refresh fa-2x"></i> Data Pemakaian</a>
+					</li>
+
+					<li>
+						<a href="#">
+						<i class="fa fa-comments fa-2x"></i> Pengaduan
+							<span class="fa arrow"></span>
+						</a>
+						<ul class="nav nav-second-level">
+
+							<li>
+								<a href="?halaman=lihat_pengaduan">Pengaduan</a>
+							</li>
+				
+						</ul>
 					</li>
 
 
@@ -387,10 +401,16 @@ font-size: 16px;">
 							case sha1('p_pengaduan_buat'):
 								include "pelanggan/pengaduan/pengaduan_buat.php";
 								break;
+							case sha1('p_pengaduan_detail'):
+								include "pelanggan/pengaduan/pengaduan_detail.php";
+								break;
+							case sha1('p_pengaduan_edit'):
+								include "pelanggan/pengaduan/pengaduan_edit.php";
+								break;
                         
                                 //default
                              default:
-                                echo "<center><h1> ERROR !</h1></center>";
+                                echo "<center><h1> ERROR TUH!</h1></center>";
                                 break;    
                         }
                     }else{

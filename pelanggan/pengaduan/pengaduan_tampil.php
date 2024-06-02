@@ -48,8 +48,7 @@ while ($data = $sql->fetch_assoc()) {
 </td>
 
         <td>
-            <a href="?halaman=pengaduan_detail&kode=<?php echo $data['id_pengaduan']; ?>" title="Detail" class="btn btn-info"><i class="glyphicon glyphicon-eye-open"></i></a>
-            <a href="?halaman=pengaduan_ubah&kode=<?php echo $data['id_pengaduan']; ?>" title="Ubah" class="btn btn-success"><i class="glyphicon glyphicon-edit"></i></a>
+            <a href="index.php?halaman=<?php echo sha1('p_pengaduan_edit');?>&id=<?= $data['id_pengaduan'];?>" class="btn btn-success"><i class="glyphicon glyphicon-edit"></i></a>
             <a href="?halaman=pengaduan_hapus&kode=<?php echo $data['id_pengaduan']; ?>" onclick="return confirm('Apakah anda yakin hapus pengaduan ini?')" title="Hapus" class="btn btn-danger"><i class="glyphicon glyphicon-trash"></i></a>
         </td>
     </tr>
@@ -62,3 +61,5 @@ while ($data = $sql->fetch_assoc()) {
     </div>
   </div>
 </div>
+
+
