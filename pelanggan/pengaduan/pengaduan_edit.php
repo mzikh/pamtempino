@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <?php }?>
                     </div>
                     <a href="index.php?halaman=<?php echo sha1('p_pengaduan_tampil');?>" class="btn btn-default">Kembali</a>
-                    <button type="submit" name="simpan" class="btn btn-primary">Simpan</button>                    
+                    <button type="submit" name="simpan" class="btn btn-primary">Edit</button>                    
                 </form>
             </div>
         </div>

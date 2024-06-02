@@ -407,6 +407,9 @@ font-size: 16px;">
 							case sha1('p_pengaduan_edit'):
 								include "pelanggan/pengaduan/pengaduan_edit.php";
 								break;
+							case sha1('p_pengaduan_hapus'):
+								include "pelanggan/pengaduan/pengaduan_hapus.php";
+								break;
                         
                                 //default
                              default:

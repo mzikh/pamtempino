@@ -49,7 +49,8 @@ while ($data = $sql->fetch_assoc()) {
 
         <td>
             <a href="index.php?halaman=<?php echo sha1('p_pengaduan_edit');?>&id=<?= $data['id_pengaduan'];?>" class="btn btn-success"><i class="glyphicon glyphicon-edit"></i></a>
-            <a href="?halaman=pengaduan_hapus&kode=<?php echo $data['id_pengaduan']; ?>" onclick="return confirm('Apakah anda yakin hapus pengaduan ini?')" title="Hapus" class="btn btn-danger"><i class="glyphicon glyphicon-trash"></i></a>
+            <a href="index.php?halaman=<?php echo sha1('p_pengaduan_hapus');?>&id=<?= $data['id_pengaduan'];?>" onclick="return confirm('Apakah anda yakin hapus pengaduan ini?')" title="Hapus" class="btn btn-danger"><i class="glyphicon glyphicon-trash"></i></a>
+            
         </td>
     </tr>
     <?php } ?>
