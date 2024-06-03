@@ -39,8 +39,10 @@
                                         <span class="label label-warning">Pending</span>
                                     <?php } elseif ($warna == 'Proses') {?>
                                         <span class="label label-info">Proses</span>
-                                    <?php } else {?>
+                                    <?php } elseif($warna == 'Selesai') {?>
                                         <span class="label label-success">Selesai</span>
+                                    <?php } else {?>
+                                        <span class="label label-danger">Batalkan</span>
                                     <?php }?>
                                 </td>
                                 <td>

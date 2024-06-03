@@ -61,7 +61,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a href="http://localhost/pamtempino" class="navbar-brand">PAMSIMAS</a>
+				<a href="http://localhost/pamtempino" class="navbar-brand">PAM-TEMPINO</a>
 			</div>
 			<div style="color: white;
 padding: 15px 50px 5px 50px;
@@ -408,6 +408,9 @@ font-size: 16px;">
 								break;
 							case sha1('p_pengaduan_edit'):
 								include "pelanggan/pengaduan/pengaduan_edit.php";
+								break;
+							case sha1('p_pengaduan_lihat'):
+								include "pelanggan/pengaduan/pengaduan_lihat.php";
 								break;
 							case sha1('p_pengaduan_hapus'):
 								include "pelanggan/pengaduan/pengaduan_hapus.php";

@@ -21,14 +21,34 @@
               </tr>
             </thead>
             <tbody>
+
+
             <?php
+
 $no = 1;
 $sql = $koneksi->query("SELECT p.*, pl.nama_pelanggan AS nama_pelanggan 
                         FROM tb_pengaduan p 
                         LEFT JOIN tb_pelanggan pl ON p.id_pelanggan = pl.id_pelanggan 
                         WHERE p.id_pelanggan = '$data_rek'");
 while ($data = $sql->fetch_assoc()) {
+$edit_button = 'none';
+$hapus_button = 'none';
+$lihat_button = 'none';
+
+if ($data['status_pengaduan'] == 'Pending') {
+  $edit_button = ''; $hapus_button = '';
+
+} else if ($data['status_pengaduan'] == 'Proses') {
+  $lihat_button = ''; 
+}  
+ else if ($data['status_pengaduan'] == 'Selesai') {
+  $lihat_button = ''; 
+} 
+  else if ($data['status_pengaduan'] == 'Batal') {
+  $lihat_button = ''; 
+} 
 ?>
+
     <tr>
         <td><?php echo $no++;?></td>
         <td><?php echo $data['tgl_pengaduan'];?></td>
@@ -42,15 +62,19 @@ while ($data = $sql->fetch_assoc()) {
         <span class="label label-warning">Pending</span>
     <?php } elseif ($warna == 'Proses') { ?>
         <span class="label label-info">Proses</span>
-    <?php } else { ?>
+    <?php } elseif ($warna == 'Selesai') { ?>
         <span class="label label-success">Selesai</span>
-    <?php } ?>
+    <?php } else { ?>
+        <span class="label label-danger">Dibatalkan</span>
+    <?php }?>
 </td>
 
+
+
         <td>
-            <a href="index.php?halaman=<?php echo sha1('p_pengaduan_edit');?>&id=<?= $data['id_pengaduan'];?>" class="btn btn-success"><i class="glyphicon glyphicon-edit"></i></a>
-            <a href="index.php?halaman=<?php echo sha1('p_pengaduan_hapus');?>&id=<?= $data['id_pengaduan'];?>" onclick="return confirm('Apakah anda yakin hapus pengaduan ini?')" title="Hapus" class="btn btn-danger"><i class="glyphicon glyphicon-trash"></i></a>
-            <a href="index.php?halaman=<?php echo sha1('p_pengaduan_lihat');?>&id=<?= $data['id_pengaduan'];?>" class="btn btn-info"><i class="fa fa-eye"></i></a>
+            <a href="index.php?halaman=<?php echo sha1('p_pengaduan_edit');?>&id=<?= $data['id_pengaduan'];?>" class="btn btn-success " style="display: <?php echo $edit_button; ?>;"><i class="glyphicon glyphicon-edit"></i> </a>
+            <a href="index.php?halaman=<?php echo sha1('p_pengaduan_hapus');?>&id=<?= $data['id_pengaduan'];?>" onclick="return confirm('Apakah anda yakin hapus pengaduan ini?')" title="Hapus" class="btn btn-danger" style="display: <?php echo $hapus_button; ?>;"><i class="glyphicon glyphicon-trash"></i></a>
+            <a href="index.php?halaman=<?php echo sha1('p_pengaduan_lihat');?>&id=<?= $data['id_pengaduan'];?>" class="btn btn-info" style="display: <?php echo $lihat_button; ?>;"><i class="fa fa-eye"></i></a>
         </td>
     </tr>
     <?php } ?>
@@ -62,5 +86,4 @@ while ($data = $sql->fetch_assoc()) {
     </div>
   </div>
 </div>
-
 

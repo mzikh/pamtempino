@@ -8,9 +8,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Determine the new status based on the current status
     $new_status = '';
-    if ($current_status == 'Pending') {
-        $new_status = 'Proses';
-    } else if ($current_status == 'Proses') {
+    if ($current_status == 'Pending')  {
+        if (isset($_POST['cancel'])) { // check if the cancel button was clicked
+            $new_status = 'Batal';
+        } else {
+            $new_status = 'Proses';
+        }
+    } else if($current_status == 'Proses') {
         $new_status = 'Selesai';
     }
 
@@ -59,6 +63,28 @@ if (isset($_GET['id'])) {
     } else {
         $button_text = "Selesai";
     }
+
+    // Determine the display status of the upload field and button disable state
+    $upload_field_display = 'none';
+    $tgl_diselesaikan_input = 'none';
+    $butki_display = 'none';
+    $button_disabled = '';
+    $batalkan_btn = 'none';
+
+
+    if ($data_cek['status_pengaduan'] == 'Proses') {
+        $upload_field_display = 'block'; $button_disabled = 'disable'; 
+    
+    } else if ($data_cek['status_pengaduan'] == 'Pending') {
+        $batalkan_btn = '';
+    } 
+    
+    else if ($data_cek['status_pengaduan'] == 'Selesai') {
+        $butki_display = ''; $button_display = 'none'; $tgl_diselesaikan_input = '';
+    } 
+    else if ($data_cek['status_pengaduan'] == 'Batal') {
+        $button_display = 'none';
+    }
 }
 ?>
 
@@ -94,24 +120,35 @@ if (isset($_GET['id'])) {
                     </div>
 
                     <div class="form-group">
-                        <label>Status Pengaduan</label>
-                        <input class="form-control" value="<?php echo $data_cek['status_pengaduan']; ?>" readonly id="status_pengaduan" />
-                    </div>
-
-                    <div class="form-group">
                         <label>Foto Pengaduan</label>
+                        <br>
                         <img src="uploads/pengaduan/<?php echo $data_cek['foto_pengaduan']; ?>" alt="<?php echo $data_cek['subjek_pengaduan']; ?>" width="300">
                     </div>
 
-                    <div class="form-group" id="uploadField" style="display: none;">
+                    <div class="form-group" id="uploadField" style="display: <?php echo $upload_field_display; ?>;">
                         <label>Upload Foto Bukti Pengaduan</label>
                         <input type="file" class="form-control" name="bukti_pengaduan" id="bukti_pengaduan" accept="image/*" onchange="enableButton()">
                     </div>
 
+                    <div class="form-group" style="display: <?php echo $tgl_diselesaikan_input; ?>;">
+                        <label>Tanggal Pengaduan Selesai</label>
+                        <input class="form-control" value="<?php echo $data_cek['tgl_diselesaikan'];?>" readonly>
+                    </div>
+
+                    <div class="form-group" style="display: <?php echo $butki_display; ?>;">
+                        <label>Bukti Foto Pengaduan</label>
+                        <br>
+                        <img src="uploads/bukti_pengaduan/<?php echo $data_cek['bukti_pengaduan']; ?>" alt="<?php echo $data_cek['subjek_pengaduan']; ?>" width="300">
+                    </div>
+
                     <div class="form-group">
                         <a href="?halaman=lihat_pengaduan" title="Kembali" class="btn btn-default">Kembali</a>
-                        <button type="submit" class="btn btn-primary" id="ubahStatusButton" >
+                        <button type="submit" class="btn btn-primary" id="ubahStatusButton" style="display: <?php echo $button_display; ?>;" <?php echo $button_disabled; ?>>
                             <?php echo $button_text; ?>
+                        </button>
+                        
+                        <button type="submit" class="btn btn-danger" id="BatalkanButton" name="cancel" style="display: <?php echo $batalkan_btn; ?>;">
+                            <?php echo 'Batalkan'; ?>
                         </button>
                     </div>
                 </form>
