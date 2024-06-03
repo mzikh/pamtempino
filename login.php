@@ -119,7 +119,7 @@ include "inc/koneksi.php";
                 $_SESSION["ses_rek"]=$data_login["no_rek"];
 
                 echo "<script>
-                        Swal.fire({title: 'Login Berhasil',text: '',icon: 'success',confirmButtonText: 'OK'
+                        Swal.fire({title: 'Login Berhasil',text: '',icon: 'success',confirmButtonText: 'YEY'
                         }).then((result) => {
                             if (result.value) {
                                 window.location = 'http://localhost/pamtempino';
