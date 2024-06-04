@@ -5,6 +5,7 @@ include "inc/koneksi.php";
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id_pengaduan = $_POST['id'];
     $current_status = $_POST['current_status'];
+    $keterangan = isset($_POST['keterangan']) ? $_POST['keterangan'] : '';
 
     // Determine the new status based on the current status
     $new_status = '';
@@ -14,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             $new_status = 'Proses';
         }
-    } else if($current_status == 'Proses') {
+    } else if ($current_status == 'Proses') {
         $new_status = 'Selesai';
     }
 
@@ -25,13 +26,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $target_file = $upload_dir . $file_name;
 
         if (move_uploaded_file($_FILES['bukti_pengaduan']['tmp_name'], $target_file)) {
-            $sql_update = "UPDATE tb_pengaduan SET status_pengaduan='$new_status', bukti_pengaduan='$file_name' WHERE id_pengaduan='$id_pengaduan'";
+            $sql_update = "UPDATE tb_pengaduan SET status_pengaduan='$new_status', bukti_pengaduan='$file_name', keterangan='$keterangan' WHERE id_pengaduan='$id_pengaduan'";
         } else {
             echo "Error uploading file.";
             exit;
         }
     } else {
-        $sql_update = "UPDATE tb_pengaduan SET status_pengaduan='$new_status' WHERE id_pengaduan='$id_pengaduan'";
+        $sql_update = "UPDATE tb_pengaduan SET status_pengaduan='$new_status', keterangan='$keterangan' WHERE id_pengaduan='$id_pengaduan'";
     }
 
     $query_update = mysqli_query($koneksi, $sql_update);
@@ -70,20 +71,26 @@ if (isset($_GET['id'])) {
     $butki_display = 'none';
     $button_disabled = '';
     $batalkan_btn = 'none';
-
+    $button_alasan = 'none';
+    $button_read = '';
 
     if ($data_cek['status_pengaduan'] == 'Proses') {
-        $upload_field_display = 'block'; $button_disabled = 'disable'; 
+        $upload_field_display = 'block'; 
+        $button_disabled = 'disable'; 
     
     } else if ($data_cek['status_pengaduan'] == 'Pending') {
         $batalkan_btn = '';
     } 
     
     else if ($data_cek['status_pengaduan'] == 'Selesai') {
-        $butki_display = ''; $button_display = 'none'; $tgl_diselesaikan_input = '';
+        $butki_display = ''; 
+        $button_display = 'none'; 
+        $tgl_diselesaikan_input = '';
     } 
     else if ($data_cek['status_pengaduan'] == 'Batal') {
         $button_display = 'none';
+        $button_alasan = '';
+        $button_read = 'readonly';
     }
 }
 ?>
@@ -141,13 +148,18 @@ if (isset($_GET['id'])) {
                         <img src="uploads/bukti_pengaduan/<?php echo $data_cek['bukti_pengaduan']; ?>" alt="<?php echo $data_cek['subjek_pengaduan']; ?>" width="300">
                     </div>
 
+                    <div class="form-group" id="alasanField" style="display: <?php echo $button_alasan; ?>;">
+                        <label>Alasan Pembatalan</label>
+                        <textarea class="form-control" name="keterangan" id="keterangan" rows="3" required <?php echo $button_read; ?>><?php echo $data_cek['keterangan']; ?></textarea>
+                    </div>
+
                     <div class="form-group">
                         <a href="?halaman=lihat_pengaduan" title="Kembali" class="btn btn-default">Kembali</a>
                         <button type="submit" class="btn btn-primary" id="ubahStatusButton" style="display: <?php echo $button_display; ?>;" <?php echo $button_disabled; ?>>
                             <?php echo $button_text; ?>
                         </button>
                         
-                        <button type="submit" class="btn btn-danger" id="BatalkanButton" name="cancel" style="display: <?php echo $batalkan_btn; ?>;">
+                        <button type="button" class="btn btn-danger" id="BatalkanButton" style="display: <?php echo $batalkan_btn; ?>;" name="cancel">
                             <?php echo 'Batalkan'; ?>
                         </button>
                     </div>
@@ -162,4 +174,24 @@ function enableButton() {
     document.getElementById('ubahStatusButton').disabled = false;
     document.getElementById('uploadField').style.display = 'block';
 }
+
+document.getElementById('BatalkanButton').addEventListener('click', function() {
+    var alasanField = document.getElementById('alasanField');
+    alasanField.style.display = 'block';
+
+    var alasanBatal = document.getElementById('keterangan');
+    if (alasanBatal.value.trim() !== '') {
+        // Add a hidden input to mark the form submission as a cancel action
+        var cancelInput = document.createElement('input');
+        cancelInput.type = 'hidden';
+        cancelInput.name = 'cancel';
+        cancelInput.value = '1';
+        document.getElementById('ubahStatusForm').appendChild(cancelInput);
+        
+        // Submit the form
+        document.getElementById('ubahStatusForm').submit();
+    } else {
+        alert("Alasan pembatalan harus diisi.");
+    }
+});
 </script>

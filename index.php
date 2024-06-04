@@ -363,6 +363,9 @@ font-size: 16px;">
 							case 'detail_pengaduan':
 								include "super/pengaduan/detail_pengaduan.php";
 								break;
+							case 'tolak_pengaduan';
+								include "super/pengaduan/tolak_pengaduan.php";
+								break;
 							
 							
 

@@ -42,7 +42,7 @@
                                     <?php } elseif($warna == 'Selesai') {?>
                                         <span class="label label-success">Selesai</span>
                                     <?php } else {?>
-                                        <span class="label label-danger">Batalkan</span>
+                                        <span class="label label-danger">Ditolak</span>
                                     <?php }?>
                                 </td>
                                 <td>

@@ -53,7 +53,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 ?>
-
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <b>Tambah Pengaduan</b>
+      </div>
+      <div class="panel-body">
+        <div class="table-responsive">
+            
 <form action="" method="post" enctype="multipart/form-data">
     <input type="hidden" name="id_pelanggan" value="<?php echo $_SESSION['id_pelanggan'];?>">
     <div class="form-group">

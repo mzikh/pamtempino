@@ -13,6 +13,7 @@ if (isset($_GET['id'])) {
         $subjek_pengaduan = $data_cek['subjek_pengaduan'];
         $deskripsi_pengaduan = $data_cek['deskripsi_pengaduan'];
         $foto_pengaduan = $data_cek['foto_pengaduan'];
+        $keterangan = $data_cek['keterangan'];
         $bukti_pengaduan = $data_cek['bukti_pengaduan'];
     } else {
         echo "<script>alert('Pengaduan tidak ditemukan');window.location='index.php?halaman=". sha1('p_pengaduan_tampil'). "'</script>";
@@ -60,6 +61,11 @@ if ($data_cek['status_pengaduan'] == 'Selesai') {
                         <?php if (!empty($foto_pengaduan)) {?>
                             <img src="uploads/pengaduan/<?php echo $foto_pengaduan;?>" alt="<?php echo $subjek_pengaduan;?>" width="300">
                         <?php }?>
+                    </div>
+
+                    <div class="form-group" style="display: <?php echo $button_alasan; ?>;">
+                        <label>Alasan Pembatalan</label>
+                        <textarea class="form-control" name="keterangan" id="keterangan" rows="3" readonly><?php echo $data_cek['keterangan']; ?></textarea>
                     </div>
 
                     <div class="form-group" style="display: <?php echo $tgl_diselesaikan_tampil; ?>;">
