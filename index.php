@@ -224,7 +224,16 @@ font-size: 16px;">
 								<a href="?halaman=<?= sha1('p_lunas_tampil') ?>">Lunas</a>
 							</li>
 						</ul>
-					</li><li>
+					</li>
+
+					<li>
+						<a href="?halaman=<?= sha1('p_simulasi_perhitungan') ?>">
+							<i class="fa fa-tags fa-2x"></i> Simulasi Perhitungan Air
+						</a>
+						
+					</li>
+					
+					<li>
 						<a href="#">
 						<i class="fa fa-comments fa-2x"></i> Pengaduan
 							<span class="fa arrow"></span>
@@ -399,6 +408,14 @@ font-size: 16px;">
                             case sha1('p_lunas_tampil'):
                                 include "pelanggan/tagih/lunas_tampil.php";
                                 break;
+
+							case sha1('p_simulasi_perhitungan'):
+								include "pelanggan/simulasi/simulasi_perhitungan.php";
+								break;
+
+
+
+
 							case sha1('p_pengaduan_tampil'):
 								include "pelanggan/pengaduan/pengaduan_tampil.php";
 								break;
