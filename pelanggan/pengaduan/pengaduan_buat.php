@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             
             
 <form action="" method="post" enctype="multipart/form-data">
-    <input type="hidden" name="id_pelanggan" value="<?php echo $_SESSION['id_pelanggan'];?>">
+    <input type="hidden" name="id_pelanggan" value="<?php echo $data_rek;?>">
     <div class="form-group">
         <label>Subjek</label>
         <input type="text" name="subjek_pengaduan" class="form-control" required>
