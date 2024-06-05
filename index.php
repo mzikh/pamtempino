@@ -47,6 +47,13 @@
 
 	<link rel="stylesheet" href="dist/swal/sweetalert2.min.css">
 	<script src="dist/swal/sweetalert2.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+	<style>
+    .swal2-popup {
+      font-size: 1.3rem !important;
+      width: 500px !important;
+    }
+  </style>
 
 </head>
 
@@ -62,14 +69,16 @@
 				</button>
 				<a href="http://localhost/pamtempino" class="navbar-brand"style="background-color: #3366CC">PAM-TEMPINO</a>
 			</div>
-			<div style="color: white;
-padding: 15px 50px 5px 50px;
-float: right;
-font-size: 16px;">
+			<div style=
+				"color: white;
+				padding: 15px 50px 5px 50px;
+				float: right;
+				font-size: 16px;">
 				<span class="label label-danger"style="background-color: #3366CC">Welcome,
 					<?php echo $data_nama_lengkap; ?>-
 					<?php echo $data_level; ?>
 				</span>
+			</div>
 		</nav>
 		<!-- /. NAV TOP  -->
 		<nav class="navbar-default navbar-side" role="navigation">
@@ -252,8 +261,8 @@ font-size: 16px;">
                 ?>
 
 					<li>
-						<a href="logout" onclick="return confirm('Apakah anda yakin ingin keluar dari aplikasi ini ?')">
-							<i class="fa fa-sign-out fa-2x"></i> Keluar</a>
+					<a href="#" id="logoutLink" class="logout-link">
+					<i class="fa fa-sign-out fa-2x"></i>Keluar</a>
 					</li>
 
 				</ul>
@@ -484,7 +493,25 @@ font-size: 16px;">
 						});
 					});
 				</script>
-
+				<script>
+					document.getElementById('logoutLink').addEventListener('click', function(event) {
+					event.preventDefault();
+					Swal.fire({
+						title: 'Apakah Anda yakin ingin Keluar?',
+						icon: 'warning',
+						showCancelButton: true,
+						confirmButtonColor: '#3085d6',
+						cancelButtonColor: '#d33',
+						confirmButtonText: 'Ya',
+						cancelButtonText: 'Tidak'
+					}).then((result) => {
+						if (result.value) {
+						// Redirect to logout.php if confirmed
+						window.location = 'logout.php';
+						}
+					});
+					});
+				</script>
 
 				<!-- CUSTOM SCRIPTS -->
 				<script src="assets/js/custom.js"></script>
