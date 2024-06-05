@@ -150,7 +150,7 @@ if (isset($_GET['id'])) {
 
                     <div class="form-group" id="alasanField" style="display: <?php echo $button_alasan; ?>;">
                         <label>Alasan Pembatalan</label>
-                        <textarea class="form-control" name="keterangan" id="keterangan" rows="3" required <?php echo $button_read; ?>><?php echo $data_cek['keterangan']; ?></textarea>
+                        <textarea class="form-control" name="keterangan" id="keterangan" rows="3" <?php echo $button_read; ?>><?php echo $data_cek['keterangan']; ?></textarea>
                     </div>
 
                     <div class="form-group">
@@ -168,7 +168,6 @@ if (isset($_GET['id'])) {
         </div>
     </div>
 </div>
-
 
 <script>
 function enableButton() {
