@@ -60,13 +60,13 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a href="http://localhost/pamtempino" class="navbar-brand">PAM-TEMPINO</a>
+				<a href="http://localhost/pamtempino" class="navbar-brand"style="background-color: #3366CC">PAM-TEMPINO</a>
 			</div>
 			<div style="color: white;
 padding: 15px 50px 5px 50px;
 float: right;
 font-size: 16px;">
-				<span class="label label-danger">Welcome,
+				<span class="label label-danger"style="background-color: #3366CC">Welcome,
 					<?php echo $data_nama_lengkap; ?>-
 					<?php echo $data_level; ?>
 				</span>

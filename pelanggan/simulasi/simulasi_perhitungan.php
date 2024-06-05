@@ -27,63 +27,50 @@ if ($query_tarif_beban) {
 }
 ?>
 
-<div class="container">
-  <div class="row">
-    <div class="col-md-12">    
-      <div class="panel panel-success">
-        <div class="panel-heading">
-          <b>Simulasi Perhitungan Air</b>
-        </div>
-        <div class="panel-body">
-          <form id="penggunaanAirForm">
-            <div class="form-group">
-              <label for="penggunaan_air">Penggunaan Air (Meter Kubik):</label>
-              <input type="number" class="form-control" id="penggunaan_air" name="penggunaan_air" min="0" step="1" required>
-            </div>
-            <button type="button" class="btn btn-primary" onclick="hitungBiaya()">Hitung Biaya</button>
-          </form>
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-success">
+      <div class="panel-heading">
+        <b>Simulasi Perhitungan Air</b>
+      </div>
+      <div class="panel-body">
+        <form id="penggunaanAirForm" class="form-inline">
+          <div class="form-group mx-sm-3 mb-2">
+            <label for="penggunaan_air" class="sr-only">Penggunaan Air</label>
+            <input type="number" class="form-control form-control-sm" id="penggunaan_air" name="penggunaan_air" min="0" step="1" required placeholder="Penggunaan Air (Meter Kubik)">
+          </div>
           <br>
-          <div id="keterangan"></div> <!-- Tempat untuk menampilkan keterangan kepada pelanggan -->
-          <div id="hasilBiaya"></div>
-        </div>
+          <br>
+          <button type="button" class="btn btn-primary mb-2" onclick="hitungBiaya()">Hitung Biaya</button>
+        </form>
+        <br>
+        <div id="keterangan" style="display: none;"></div>
+        <div id="hasilBiaya" class="alert alert-success" role="alert" style="display: none;"></div>
       </div>
     </div>
   </div>
 </div>
 
+<script>
+  function hitungBiaya() {
+  var penggunaan_air = parseFloat(document.getElementById('penggunaan_air').value);
 
+  if (isNaN(penggunaan_air)) {
+    alert("Masukkan angka untuk penggunaan air.");
+    return;
+  }
 
-    <script>
-        function hitungBiaya() {
-            var penggunaan_air = parseFloat(document.getElementById('penggunaan_air').value);
+  var tarif_layanan = <?php echo $tarif_layanan; ?>;
+  var tarif_beban = <?php echo $tarif_beban; ?>;
 
-            if (isNaN(penggunaan_air)) {
-                alert("Masukkan angka untuk penggunaan air.");
-                return;
-            }
+  var biaya_pemakaian_air = (penggunaan_air * tarif_layanan) + tarif_beban;
 
-            var tarif_layanan = <?php echo $tarif_layanan; ?>; // Tarif layanan air yang diambil dari database
-            var tarif_beban = <?php echo $tarif_beban; ?>; // Tarif beban air yang diambil dari database
+  // Keterangan tidak ditampilkan
+  document.getElementById('keterangan').style.display = "none";
 
-            var biaya_pemakaian_air = (penggunaan_air * tarif_layanan) + tarif_beban;
+  var hasilBiaya = "<strong>Biaya pemakaian air</strong> untuk penggunaan <strong>" + penggunaan_air + " Meter Kubik</strong> adalah: <span class='text-success'><strong>Rp " + biaya_pemakaian_air.toFixed(2) + "</strong></span>";
 
-            // Menampilkan keterangan kepada pelanggan
-            var 
-            
-            keterangan = "Biaya pemakaian air = (Penggunaan Air * Tarif Layanan) + Tarif Beban";
-            keterangan += "<br>";
-            keterangan += "Tarif layanan anda = "+ tarif_layanan;
-            keterangan += "<br>";
-            keterangan += "Tarif Beban anda = "+ tarif_beban;
-            keterangan += "<br>";
-            keterangan += "Biaya pemakaian air = (" + penggunaan_air + " * " + tarif_layanan + ") + " + tarif_beban;
-            keterangan += "<br>";
-            keterangan += "Biaya pemakaian air = " + biaya_pemakaian_air.toFixed(2) + " Rupiah.";
-
-            document.getElementById('keterangan').innerHTML = keterangan;
-            document.getElementById('hasilBiaya').innerHTML = "Biaya pemakaian air untuk penggunaan " + penggunaan_air + " Meter Kubik adalah: Rp " + biaya_pemakaian_air.toFixed(2);
-        }
-    </script>
-
-
-
+  document.getElementById('hasilBiaya').innerHTML = hasilBiaya;
+  document.getElementById('hasilBiaya').style.display = "block";
+}
+</script>
