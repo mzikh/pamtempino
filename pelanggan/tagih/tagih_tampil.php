@@ -35,7 +35,7 @@
                                     while ($data= $sql->fetch_assoc()) {
 
                                     ?>
-
+    
                                     <tr>
                                         <td><?php echo $no++; ?></td>
                                         <td><?php echo $data['nama_bulan']; ?> - <?php echo $data['tahun']; ?></td>

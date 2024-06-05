@@ -72,7 +72,6 @@ if ($data_cek['status_pengaduan'] == 'Selesai') {
                         <label>Tanggal Pengaduan Selesai</label>
                         <input class="form-control" value="<?php echo $data_cek['tgl_diselesaikan'];?>" readonly>
                     </div>
-
                     <div class="form-group" style="display: <?php echo $foto_pengaduan_tampil; ?>;">
                         <label>Foto bukti Pengaduan</label>
                         <br>

@@ -69,8 +69,6 @@ if ($data['status_pengaduan'] == 'Pending') {
     <?php }?>
 </td>
 
-
-
         <td>
             <a href="index.php?halaman=<?php echo sha1('p_pengaduan_edit');?>&id=<?= $data['id_pengaduan'];?>" class="btn btn-success " style="display: <?php echo $edit_button; ?>;"><i class="glyphicon glyphicon-edit"></i> </a>
             <a href="index.php?halaman=<?php echo sha1('p_pengaduan_hapus');?>&id=<?= $data['id_pengaduan'];?>" onclick="return confirm('Apakah anda yakin hapus pengaduan ini?')" title="Hapus" class="btn btn-danger" style="display: <?php echo $hapus_button; ?>;"><i class="glyphicon glyphicon-trash"></i></a>

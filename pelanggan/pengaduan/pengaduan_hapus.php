@@ -17,7 +17,6 @@ if (isset($_GET['id'])) {
         exit;
     }
 }
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $sql = $koneksi->query("DELETE FROM tb_pengaduan WHERE id_pengaduan='$id_pengaduan'");
 

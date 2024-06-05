@@ -17,7 +17,6 @@ if (isset($_GET['id'])) {
         exit;
     }
 }
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $subjek_pengaduan = $koneksi->real_escape_string($_POST['subjek_pengaduan']);
     $deskripsi_pengaduan = $koneksi->real_escape_string($_POST['deskripsi_pengaduan']);

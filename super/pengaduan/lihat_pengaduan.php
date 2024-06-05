@@ -20,7 +20,6 @@
                         <tbody>
                             <?php
                             include "inc/koneksi.php";
-
                             // Query untuk mengambil semua pengaduan pelanggan
                             $no = 1;
                             $sql = $koneksi->query("SELECT p.*, pl.nama_pelanggan FROM tb_pengaduan p JOIN tb_pelanggan pl ON p.id_pelanggan = pl.id_pelanggan ORDER BY p.tgl_pengaduan DESC");
