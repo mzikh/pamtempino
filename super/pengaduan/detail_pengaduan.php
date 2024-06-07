@@ -7,6 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $current_status = $_POST['current_status'];
     $keterangan = isset($_POST['keterangan']) ? $_POST['keterangan'] : '';
 
+
     // Determine the new status based on the current status
     $new_status = '';
     if ($current_status == 'Pending')  {
@@ -14,10 +15,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $new_status = 'Batal';
         } else {
             $new_status = 'Proses';
-        }
-    } else if ($current_status == 'Proses') {
+        } 
+        }else if ($current_status == 'Batal'){
+            if (isset($_POST['batalcancel'])) { // check if the cancel button was clicked
+                $new_status = 'Pending';
+                $keterangan = '';
+            } else {
+                $new_status = 'Batal';
+            } 
+            }
+            
+        else if ($current_status == 'Proses') {
         $new_status = 'Selesai';
-    }
+        }
 
     // If a file was uploaded, handle the file upload
     if (isset($_FILES['bukti_pengaduan']) && $_FILES['bukti_pengaduan']['error'] == 0) {
@@ -73,6 +83,7 @@ if (isset($_GET['id'])) {
     $batalkan_btn = 'none';
     $button_alasan = 'none';
     $button_read = '';
+    $batalkan_tolak = 'none';
 
     if ($data_cek['status_pengaduan'] == 'Proses') {
         $upload_field_display = 'block'; 
@@ -91,7 +102,10 @@ if (isset($_GET['id'])) {
         $button_display = 'none';
         $button_alasan = '';
         $button_read = 'readonly';
+        $batalkan_tolak_button = 'Pulihkan';
+        $batalkan_tolak = '';
     }
+
 }
 ?>
 
@@ -158,8 +172,12 @@ if (isset($_GET['id'])) {
                         <button type="submit" class="btn btn-primary" id="ubahStatusButton" style="display: <?php echo $button_display; ?>;" <?php echo $button_disabled; ?>>
                             <?php echo $button_text; ?>
                         </button>
+
+                        <button onclick="batalkantolakConfirm()"  type="submit" class="btn btn-primary" id="ubahStatusButton" style="display: <?php echo $batalkan_tolak; ?>;" name="batalcancel">
+                            <?php echo $batalkan_tolak_button; ?>
+                        </button>
                         
-                        <button type="button" class="btn btn-danger" id="BatalkanButton" style="display: <?php echo $batalkan_btn; ?>;" name="cancel">
+                        <button onclick="hideProsesButton()" type="button" class="btn btn-danger" id="BatalkanButton" style="display: <?php echo $batalkan_btn; ?>;" name="cancel">
                             <?php echo 'Batalkan'; ?>
                         </button>
                     </div>
@@ -194,4 +212,14 @@ document.getElementById('BatalkanButton').addEventListener('click', function() {
         alert("Alasan pembatalan harus diisi.");
     }
 });
+
+</script>
+<script>
+    function hideProsesButton() {
+        // Dapatkan elemen tombol "Proses" menggunakan id-nya
+        var prosesButton = document.getElementById('ubahStatusButton');
+        
+        // Sembunyikan tombol "Proses" dengan mengubah properti display-nya
+        prosesButton.style.display = 'none';
+    }
 </script>
