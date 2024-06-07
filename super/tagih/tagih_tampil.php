@@ -54,7 +54,12 @@
                                     order by tahun asc, id_bulan asc");
                                     while ($data= $sql->fetch_assoc()) {
 
+                                    if ($data_level=="Administrator"){
+                                        $button_bayar = 'none';
+                                    }
+
                                     ?>
+                                    
 
                                     <tr>
                                         <td><?php echo $no++; ?></td>
@@ -63,7 +68,7 @@
                                         <td><?php echo $data['pakai']; ?> M<sup> 3</sup></td> 
                                         <td><?php echo rupiah($data['tagihan']); ?></td>        
                                         <td>
-                                        <a href="?halaman=tagih_bayar&kode=<?php echo $data['id_tagihan']; ?>" title="Bayar Tagihan Ini" class="btn btn-primary"><i class="glyphicon glyphicon-send"></i></a>
+                                        <a href="?halaman=tagih_bayar&kode=<?php echo $data['id_tagihan']; ?>" title="Bayar Tagihan Ini" class="btn btn-primary" style="display: <?php echo $button_bayar; ?>;"><i class="glyphicon glyphicon-send"></i></a>
                                     </td>
 
                                     </tr>

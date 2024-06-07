@@ -51,7 +51,7 @@
 	<style>
     .swal2-popup {
       font-size: 1.3rem !important;
-      width: 500px !important;
+      width: 450px !important;
     }
   </style>
 
@@ -192,6 +192,21 @@
 					<li>
 						<a href="?halaman=pakai_tampil">
 							<i class="fa fa-refresh fa-2x"></i> Data Pemakaian</a>
+					</li>
+					<li>
+						<a href="#">
+							<i class="fa fa-tags fa-2x"></i> Tagihan
+							<span class="fa arrow"></span>
+						</a>
+						<ul class="nav nav-second-level">
+							<li>
+								<a href="?halaman=tagih_tampil">Belum Bayar</a>
+							</li>
+
+							<li>
+								<a href="?halaman=lunas_tampil">Lunas</a>
+							</li>
+						</ul>
 					</li>
 
 					<li>

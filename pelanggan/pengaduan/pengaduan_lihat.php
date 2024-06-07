@@ -22,12 +22,13 @@ if (isset($_GET['id'])) {
 }
 $foto_pengaduan_tampil = 'none';
 $tgl_diselesaikan_tampil = 'none';
+$button_alasan = 'none';
 
 if ($data_cek['status_pengaduan'] == 'Selesai') {
-    $foto_pengaduan_tampil = ''; $tgl_diselesaikan_tampil = '' ;
+    $foto_pengaduan_tampil = ''; $tgl_diselesaikan_tampil = '';$butki_display = ''; $button_display = 'none';
 
-} else if ($data_cek['status_pengaduan'] == 'Selesai') {
-    $butki_display = ''; $button_display = 'none';
+} else if ($data_cek['status_pengaduan'] == 'Batal') {
+    $button_alasan = '';
 } 
 
 ?>
